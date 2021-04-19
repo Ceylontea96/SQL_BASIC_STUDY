@@ -1,0 +1,57 @@
+
+-- # 서브쿼리
+-- ## 단일 행 서브 쿼리
+
+SELECT
+    A.EMP_NO, A.EMP_NM, A.DEPT_CD
+FROM TB_EMP A
+WHERE A.DEPT_CD =
+(
+    SELECT DEPT_CD
+    FROM TB_EMP
+    WHERE EMP_NO = '1000000005'
+)
+;
+
+SELECT * FROM TB_EMP;
+SELECT * FROM TB_SAL_HIS;
+
+SELECT
+    A.EMP_NO, A.EMP_NM, B.PAY_DE, B.PAY_AMT
+FROM TB_EMP A, TB_SAL_HIS B
+WHERE PAY_DE = '20200525'
+    AND PAY_AMT >=
+(
+    SELECT AVG(PAY_AMT)
+    FROM TB_SAL_HIS
+    WHERE PAY_DE = '20200525'
+)
+    AND A.EMP_NO = B.EMP_NO
+--GROUP BY EMP_NO
+ORDER BY A.EMP_NO
+    
+;
+
+-- ## 다중 행 서브 쿼리
+-- 서브쿼리 조회 건수가 여러 행인 것
+-- 다중행 연산자: IN, ANY, EXISTS
+
+
+-- 한국데이터베이스진흥원에서 발급한 자격증을 가지고 있는 사원번호와 자격증 개수를 조회
+SELECT * FROM TB_CERTI;
+SELECT * FROM TB_EMP_CERTI;
+SELECT
+    A.EMP_NO, B.EMP_NM, COUNT(A.CERTI_CD)
+FROM TB_EMP_CERTI A
+JOIN TB_EMP B
+ON A.EMP_NO = B.EMP_NO
+WHERE A.CERTI_CD IN
+(
+    SELECT
+        CERTI_CD
+    FROM TB_CERTI
+    WHERE ISSUE_INSTI_NM = '한국데이터베이스진흥원'
+)
+GROUP BY A.EMP_NO, B.EMP_NM
+ORDER BY A.EMP_NO
+;
