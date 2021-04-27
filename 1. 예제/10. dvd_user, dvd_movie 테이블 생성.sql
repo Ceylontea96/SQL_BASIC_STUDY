@@ -40,4 +40,24 @@ CREATE TABLE dvd_movie (
     REFERENCES dvd_user (user_number)
 );
 
+ALTER TABLE dvd_movie MODIFY pub_year CHAR(4);
+ALTER TABLE dvd_movie MODIFY movie_name VARCHAR(30);
 SELECT * FROM dvd_movie;
+DELETE FROM dvd_movie;
+
+
+CREATE TABLE dvd_order (
+    order_number NUMBER(10),
+    user_number NUMBER(10) NOT NULL,
+    movie_name VARCHAR2(30) NOT NULL,
+    order_date DATE NOT NULL,
+    return_date DATE NOT NULL,
+    overdue_day NUMBER(4),
+    overdue_charge NUMBER(7),
+    order_status CHAR(1) NOT NULL,
+    CONSTRAINT pk_dvd_order PRIMARY KEY (order_number),
+    CONSTRAINT fk_dvd_order FOREIGN KEY (user_name)
+    REFERENCES dvd_user (user_number),
+    CONSTRAINT fk_dvd_order FOREIGN KEY (movie_name)
+    REFERENCES dvd_movie (movie_name)
+);
